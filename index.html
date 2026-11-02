@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAVA PROTOCOL // Advanced Typing Challenge Game</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/bubbles.css">
+  <link rel="stylesheet" href="css/keymagnet.css">
+</head>
+<body>
+  <!-- Ambient Atmosphere -->
+  <div class="cyber-bg-layer"></div>
+  <canvas id="particleCanvas"></canvas>
+  <div class="cyber-scanlines"></div>
+
+  <!-- Main SPA Container -->
+  <main class="app-container">
+    
+    <!-- Top System Bar -->
+    <header class="top-nav">
+      <div class="brand-section">
+        <div class="brand-logo-glow">LP</div>
+        <div class="brand-text">
+          <h1>Lava Protocol</h1>
+          <div class="brand-badge">CSC336 Web Technologies // Lab Mid</div>
+        </div>
+      </div>
+      <div class="nav-controls">
+        <button id="btnMute" class="icon-btn active" title="Toggle Sound FX">
+          🔊 Sound On
+        </button>
+      </div>
+    </header>
+
+    <!-- In-Game Dynamic HUD (Visible during gameplay) -->
+    <section id="gameHud" class="game-hud" style="display: none;">
+      <!-- Stats Left -->
+      <div class="hud-group">
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">Score</span>
+          <span id="hudScore" class="hud-stat-value highlight-red">0</span>
+        </div>
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">Best Record</span>
+          <span id="hudHighScore" class="hud-stat-value highlight-gold">0</span>
+        </div>
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">Streak</span>
+          <div id="hudCombo" class="combo-badge">0x</div>
+        </div>
+      </div>
+
+      <!-- Mode Specific Indicator (Center) -->
+      <div class="hud-group">
+        <!-- Mode A: Lives/Misses Indicator -->
+        <div id="hudLivesGroup" class="hud-stat-box">
+          <span class="hud-stat-label">Miss Limit (6 Max)</span>
+          <div id="hudLivesList" class="lives-indicator">
+            <!-- 6 Life dots rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Mode B: Session Countdown Timer -->
+        <div id="hudTimerGroup" class="hud-stat-box" style="display: none;">
+          <span class="hud-stat-label">Time Remaining</span>
+          <span id="hudTimer" class="hud-stat-value highlight-red">60s</span>
+        </div>
+
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">Accuracy</span>
+          <span id="hudAccuracy" class="hud-stat-value">100%</span>
+        </div>
+      </div>
+
+      <!-- Control Actions (Right) -->
+      <div class="game-controls-bar">
+        <button id="btnPause" class="cyber-btn cyber-btn-outline cyber-btn-sm">
+          ⏸ Pause
+        </button>
+        <button id="btnRestart" class="cyber-btn cyber-btn-outline cyber-btn-sm">
+          ↺ Restart
+        </button>
+        <button id="btnExit" class="cyber-btn cyber-btn-outline cyber-btn-sm">
+          ✕ Exit
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 1: HOME SCREEN (MODE SELECTION)
+         =================================================================== -->
+    <section id="viewHome" class="view-screen active">
+      <div class="hero-banner">
+        <div class="hero-subtitle">COMSATS UNIVERSITY ISLAMABAD // VEHARI CAMPUS</div>
+        <h2 class="hero-title">Typing Challenge <span>Arena</span></h2>
+        <p class="hero-desc">
+          Test your letter recognition speed and mechanical keyboard precision in an intense lava-themed arcade environment. Select a mode to deploy.
+        </p>
+      </div>
+
+      <!-- Modes Selection Grid -->
+      <div class="modes-grid">
+        
+        <!-- Mode A Card: Bubbles -->
+        <article class="mode-card">
+          <div class="mode-card-img-wrapper">
+            <img 
+              src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80&fm=webp" 
+              alt="Mode A Bubbles Cyber Visual" 
+              class="mode-card-img"
+              loading="lazy"
+            />
+            <span class="mode-card-badge">MODE A // RECOGNITION</span>
+          </div>
+          
+          <div class="mode-card-body">
+            <h3 class="mode-title">Magma Bubbles</h3>
+            <p class="mode-description">
+              At least 5 magma orbs ascend toward the ceiling danger zone. Press matching keys to detonate bubbles. Prevent 6 misses or face catastrophic overload.
+            </p>
+            
+            <ul class="mode-features-list">
+              <li>Multi-bubble physics & upward drift</li>
+              <li>Combo multiplier & particle explosions</li>
+              <li>Ceiling boundary collision & miss penalties</li>
+              <li>Progressive speed escalation as score rises</li>
+            </ul>
+
+            <div class="card-config-group">
+              <div class="config-row">
+                <span class="config-label">Difficulty</span>
+                <div class="pill-group" data-difficulty-group="bubbles">
+                  <button class="pill-option active" data-value="easy">Easy</button>
+                  <button class="pill-option" data-value="medium">Medium</button>
+                  <button class="pill-option" data-value="hard">Hard</button>
+                </div>
+              </div>
+              <div class="config-row">
+                <span class="config-label">High Score</span>
+                <span id="homeBestBubbles" class="hud-stat-value" style="font-size: 1.1rem; color: #FBBF24;">0</span>
+              </div>
+              <button id="btnStartBubbles" class="cyber-btn" style="width: 100%; margin-top: 8px;">
+                ⚡ Launch Bubbles
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Mode B Card: KeyMagnet -->
+        <article class="mode-card">
+          <div class="mode-card-img-wrapper">
+            <img 
+              src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80&fm=webp" 
+              alt="Mode B KeyMagnet Mechanical Keyboard Visual" 
+              class="mode-card-img"
+              loading="lazy"
+            />
+            <span class="mode-card-badge">MODE B // PRECISION</span>
+          </div>
+          
+          <div class="mode-card-body">
+            <h3 class="mode-title">KeyMagnet Forge</h3>
+            <p class="mode-description">
+              High-intensity mechanical keyboard target tracking. A pulsating magnetic beacon targets keys for rapid execution with millisecond latency measurement.
+            </p>
+            
+            <ul class="mode-features-list">
+              <li>Interactive 3D mechanical keyboard display</li>
+              <li>Dedicated Practice Sets: Home Row, QWERTY, etc.</li>
+              <li>Millisecond response time tracking</li>
+              <li>Keys-per-minute & precision accuracy analytics</li>
+            </ul>
+
+            <div class="card-config-group">
+              <div class="config-row">
+                <span class="config-label">Practice Set</span>
+                <div class="pill-group" data-keyset-group="keymagnet">
+                  <button class="pill-option active" data-value="home">Home Row</button>
+                  <button class="pill-option" data-value="top">Top Row</button>
+                  <button class="pill-option" data-value="bottom">Bottom</button>
+                  <button class="pill-option" data-value="all">All</button>
+                </div>
+              </div>
+              <div class="config-row">
+                <span class="config-label">Difficulty</span>
+                <div class="pill-group" data-difficulty-group="keymagnet">
+                  <button class="pill-option active" data-value="easy">Easy</button>
+                  <button class="pill-option" data-value="medium">Medium</button>
+                  <button class="pill-option" data-value="hard">Hard</button>
+                </div>
+              </div>
+              <div class="config-row">
+                <span class="config-label">High Score</span>
+                <span id="homeBestKeyMagnet" class="hud-stat-value" style="font-size: 1.1rem; color: #FBBF24;">0</span>
+              </div>
+              <button id="btnStartKeyMagnet" class="cyber-btn" style="width: 100%; margin-top: 8px;">
+                ⚡ Launch KeyMagnet
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 2: MODE A (BUBBLES GAMEPLAY)
+         =================================================================== -->
+    <section id="viewBubbles" class="view-screen">
+      <div class="bubbles-game-wrapper">
+        <div id="bubblesArena" class="bubbles-arena">
+          <!-- Ceiling Danger Miss Boundary -->
+          <div class="danger-boundary">
+            <span class="danger-boundary-label">⚠️ CEILING OVERLOAD DANGER BOUNDARY ⚠️</span>
+          </div>
+          <!-- Rising bubbles spawned dynamically -->
+        </div>
+
+        <!-- Mobile Touch Typing input field -->
+        <div class="mobile-typing-assist">
+          <input type="text" id="mobileInputBubbles" placeholder="Tap here to pop or open keyboard..." autocomplete="off" autocapitalize="none">
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 3: MODE B (KEYMAGNET PRECISION GAMEPLAY)
+         =================================================================== -->
+    <section id="viewKeyMagnet" class="view-screen">
+      <div class="keymagnet-game-wrapper">
+        
+        <!-- Target Attractor Beacon Forge -->
+        <div class="target-forge-panel">
+          <div class="forge-magnetic-rings"></div>
+          <div class="target-label-sub">MAGNETIC TARGET KEY</div>
+          <div id="targetBeacon" class="target-key-beacon">
+            <span class="target-key-char">A</span>
+          </div>
+          <div class="target-timeout-track">
+            <div class="target-timeout-fill"></div>
+          </div>
+        </div>
+
+        <!-- Interactive 3D Cyber Keyboard -->
+        <div id="cyberKeyboard" class="cyber-keyboard-panel">
+          <!-- Keyboard rows rendered dynamically -->
+        </div>
+
+        <!-- Precision Analytics Strip -->
+        <div class="precision-analytics-strip">
+          <div class="analytic-card">
+            <span class="analytic-label">Reaction Latency</span>
+            <span id="statLiveReaction" class="analytic-num" style="color: #60A5FA;">0ms</span>
+          </div>
+          <div class="analytic-card">
+            <span class="analytic-label">Keys / Min (KPM)</span>
+            <span id="statLiveKpm" class="analytic-num" style="color: #34D399;">0</span>
+          </div>
+          <div class="analytic-card">
+            <span class="analytic-label">Precision Rate</span>
+            <span id="statLiveAccuracy" class="analytic-num" style="color: #F87171;">100%</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         MODAL 1: RESULTS & MISSION DEBRIEF SCREEN
+         =================================================================== -->
+    <div id="resultsModal" class="modal-overlay">
+      <div class="modal-card">
+        <div id="debriefRank" class="modal-badge-rank">S</div>
+        <h3 id="debriefTitle" class="modal-title">MISSION ACCOMPLISHED</h3>
+        <p class="modal-subtitle">Performance telemetry and combat analytics debrief</p>
+        
+        <div id="debriefRecordNotice" style="display: none; margin-bottom: 16px; color: #FBBF24; font-family: var(--font-mono); font-weight: 700; letter-spacing: 2px;">
+          ★ NEW HIGH SCORE RECORD ACHIEVED! ★
+        </div>
+
+        <div class="stats-grid-debrief">
+          <div class="stat-box-item">
+            <span class="stat-box-title">Final Score</span>
+            <div id="debriefScore" class="stat-box-num highlight-red">0</div>
+          </div>
+          <div class="stat-box-item">
+            <span class="stat-box-title">Overall Accuracy</span>
+            <div id="debriefAccuracy" class="stat-box-num">0%</div>
+          </div>
+          <div class="stat-box-item">
+            <span class="stat-box-title">Avg Latency / Hits</span>
+            <div id="debriefReaction" class="stat-box-num">0ms</div>
+          </div>
+          <div class="stat-box-item">
+            <span class="stat-box-title">Max Combo Streak</span>
+            <div id="debriefCombo" class="stat-box-num highlight-gold">0x</div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="btnPlayAgain" class="cyber-btn">
+            ↺ Play Again
+          </button>
+          <button id="btnModalMenu" class="cyber-btn cyber-btn-outline">
+            ☰ Main Menu
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 2: PAUSE MENU OVERLAY
+         =================================================================== -->
+    <div id="pauseModal" class="modal-overlay">
+      <div class="modal-card" style="max-width: 420px;">
+        <h3 class="modal-title" style="margin-bottom: 24px;">PROTOCOL PAUSED</h3>
+        <div class="modal-actions" style="flex-direction: column; gap: 12px;">
+          <button id="btnResumeModal" class="cyber-btn">
+            ▶ Resume Mission
+          </button>
+          <button id="btnRestartModal" class="cyber-btn cyber-btn-outline">
+            ↺ Restart Current Mode
+          </button>
+          <button id="btnQuitModal" class="cyber-btn cyber-btn-outline">
+            ✕ Exit to Main Menu
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Application Bootstrap -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

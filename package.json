@@ -1,0 +1,19 @@
+{
+  "name": "csc336-typing-challenge-game",
+  "version": "1.0.0",
+  "description": "CSC336 Web Technologies Lab Mid - Advanced Lava-Themed Typing Challenge Game",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "typing-game",
+    "html5",
+    "css3",
+    "javascript-es6",
+    "web-technologies",
+    "comsats"
+  ],
+  "author": "BSSE Student",
+  "license": "MIT"
+}

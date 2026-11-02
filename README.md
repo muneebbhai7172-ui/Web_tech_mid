@@ -10,6 +10,10 @@
 A responsive, high-performance Typing Challenge Game built strictly using **HTML5, CSS3, and ES6+ JavaScript**. Styled in an **esports Lava Red, Obsidian Black, and Crisp White** cyber aesthetic with low-latency Web Audio sound synthesis, particle simulations, and real-time performance analytics.
 
 ---
+<img width="1162" height="682" alt="image" src="https://github.com/user-attachments/assets/8c163d86-ed5e-492f-b0b9-b51e2fef8951" />
+<img width="1847" height="813" alt="image" src="https://github.com/user-attachments/assets/5247cbf6-5b3e-41dd-9c61-6a030c58518f" />
+<img width="1917" height="890" alt="image" src="https://github.com/user-attachments/assets/00731474-717c-4a11-99d4-d5e61ca67b74" />
+<img width="1815" height="897" alt="image" src="https://github.com/user-attachments/assets/511efae9-6625-43f9-8b87-e2017dee80ba" />
 
 ## 🎮 Game Modes
 

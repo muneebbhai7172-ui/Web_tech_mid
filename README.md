@@ -101,3 +101,4 @@ muneeb-web/
    `SoundEngine` in `js/audio.js` uses `AudioContext` oscillators (`sine`, `triangle`, `sawtooth`) with exponential gain decay envelopes. It requires no external `.mp3` or `.wav` files, eliminating loading delays or 404 errors.
 4. **How are high scores preserved?**  
    Scores are stored in browser `localStorage` keyed by mode and difficulty (`bubbles_easy`, `keymagnet_hard`, etc.).
+

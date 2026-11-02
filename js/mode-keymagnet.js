@@ -94,6 +94,7 @@ export class KeyMagnetEngine {
     if (this.targetCharEl) this.targetCharEl.textContent = '-';
     if (this.timeoutFillEl) this.timeoutFillEl.style.width = '100%';
     this.clearKeyHighlights();
+    this.updateHud();
   }
 
   pause() {
@@ -368,3 +369,4 @@ export class KeyMagnetEngine {
     }
   }
 }
+

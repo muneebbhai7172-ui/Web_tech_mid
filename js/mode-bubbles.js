@@ -72,6 +72,7 @@ export class BubblesEngine {
       existing.forEach(b => b.remove());
     }
     this.activeBubbles = [];
+    this.updateHud();
   }
 
   pause() {
@@ -362,3 +363,4 @@ export class BubblesEngine {
     }
   }
 }
+

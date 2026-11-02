@@ -1,6 +1,6 @@
 /* ===================================================================
    LAVA RED, OBSIDIAN BLACK & CRISP WHITE DESIGN SYSTEM
-   CSC336 Web Technologies - Advanced Esports Typing Challenge Game
+   Supports Light & Dark Modes + Cyber Glow Accents
    =================================================================== */
 
 :root {
@@ -9,30 +9,34 @@
   --lava-bright: #FF4D4D;
   --lava-deep: #D01414;
   --lava-dark: #800A0A;
-  --lava-glow: rgba(255, 42, 42, 0.65);
-  --lava-glow-intense: rgba(255, 42, 42, 0.95);
-  --lava-gradient: linear-gradient(135deg, #FF4D4D 0%, #FF2A2A 50%, #990000 100%);
-  --lava-gradient-hover: linear-gradient(135deg, #FF6666 0%, #FF3838 50%, #B30000 100%);
+  --lava-glow: rgba(255, 42, 42, 0.55);
+  --lava-glow-intense: rgba(255, 42, 42, 0.85);
+  --lava-gradient: linear-gradient(135deg, #FF4D4D 0%, #FF2A2A 50%, #B30A0A 100%);
+  --lava-gradient-hover: linear-gradient(135deg, #FF6B6B 0%, #FF3D3D 50%, #D01414 100%);
 
-  /* Obsidian & Carbon Black Spectrum */
+  /* Default Dark Mode Palette */
   --bg-deep: #07070A;
   --bg-surface: #0E0F16;
   --bg-panel: #141622;
-  --bg-card: rgba(20, 22, 34, 0.85);
-  --border-subtle: #242738;
+  --bg-card: rgba(18, 20, 32, 0.92);
+  --border-subtle: #25283B;
   --border-active: #FF2A2A;
 
-  /* Crisp White & Silver Spectrum */
   --text-white: #FFFFFF;
-  --text-silver: #E5E7EB;
-  --text-muted: #9CA3AF;
-  --text-dim: #6B7280;
+  --text-silver: #E2E4EB;
+  --text-muted: #9499AB;
+  --text-dim: #64687A;
+
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --key-bg: #181A26;
+  --key-border: #2B2F42;
+  --key-bottom: #0D0E15;
+  --bg-overlay: rgba(7, 7, 10, 0.88);
 
   /* Status Signals */
   --signal-success: #10B981;
   --signal-warning: #F59E0B;
   --signal-danger: #EF4444;
-  --signal-info: #3B82F6;
 
   /* Typography */
   --font-display: 'Rajdhani', 'Space Grotesk', -apple-system, sans-serif;
@@ -42,14 +46,46 @@
   /* Layout & Elevations */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
   --radius-pill: 9999px;
 
-  --shadow-lava: 0 0 25px rgba(255, 42, 42, 0.45);
-  --shadow-lava-lg: 0 0 45px rgba(255, 42, 42, 0.65);
-  --shadow-panel: 0 12px 36px rgba(0, 0, 0, 0.75);
+  --shadow-lava: 0 0 18px rgba(255, 42, 42, 0.45);
+  --shadow-lava-lg: 0 0 35px rgba(255, 42, 42, 0.65);
+  --shadow-panel: 0 8px 28px rgba(0, 0, 0, 0.7);
 
   --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===================================================================
+   LIGHT THEME OVERRIDES
+   Clean White/Silver canvas with Lava Red brand accents
+   =================================================================== */
+[data-theme="light"] {
+  --bg-deep: #F1F3F7;
+  --bg-surface: #FFFFFF;
+  --bg-panel: #E5E8EF;
+  --bg-card: rgba(255, 255, 255, 0.94);
+  --border-subtle: #D2D6E2;
+  --border-active: #D91818;
+
+  --text-white: #0F172A;
+  --text-silver: #334155;
+  --text-muted: #64748B;
+  --text-dim: #94A3B8;
+
+  --card-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --key-bg: #FFFFFF;
+  --key-border: #CBD5E1;
+  --key-bottom: #94A3B8;
+  --bg-overlay: rgba(15, 23, 42, 0.65);
+
+  --lava-primary: #D91818;
+  --lava-bright: #E62A2A;
+  --lava-deep: #B01010;
+  --lava-gradient: linear-gradient(135deg, #EF3333 0%, #D91818 50%, #990D0D 100%);
+  --lava-glow: rgba(217, 24, 24, 0.35);
+  --lava-glow-intense: rgba(217, 24, 24, 0.6);
+  --shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.09);
 }

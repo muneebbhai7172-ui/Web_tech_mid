@@ -1,7 +1,6 @@
 /**
  * ===================================================================
  * LOCAL STORAGE & STATS MANAGER
- * Persists high scores, audio prefs, and player records locally
  * ===================================================================
  */
 
@@ -31,7 +30,7 @@ export const storageManager = {
       if (score > (scores[key] || 0)) {
         scores[key] = score;
         localStorage.setItem(STORAGE_KEY_HIGH_SCORES, JSON.stringify(scores));
-        return true; // New record!
+        return true;
       }
       return false;
     } catch {
@@ -42,15 +41,17 @@ export const storageManager = {
   getSettings() {
     try {
       const data = localStorage.getItem(STORAGE_KEY_SETTINGS);
-      return data ? JSON.parse(data) : { muted: false };
+      return data ? JSON.parse(data) : { muted: false, theme: 'dark' };
     } catch {
-      return { muted: false };
+      return { muted: false, theme: 'dark' };
     }
   },
 
   saveSettings(settings) {
     try {
-      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
+      const current = this.getSettings();
+      const merged = { ...current, ...settings };
+      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(merged));
     } catch {
       // storage unavailable guard
     }

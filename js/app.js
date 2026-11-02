@@ -15,7 +15,7 @@ class TypingGameApp {
   constructor() {
     this.currentView = 'home'; // 'home' | 'bubbles' | 'keymagnet'
     this.currentDifficulty = 'easy';
-    this.currentKeySet = 'home';
+    this.currentKeySet = 'all';
     this.isPaused = false;
     this.theme = 'dark';
 

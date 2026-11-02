@@ -92,12 +92,25 @@ export class BubblesEngine {
     }
   }
 
+  getRandomUniqueLetter() {
+    const preset = this.config[this.difficulty];
+    const activeChars = new Set(this.activeBubbles.map(b => b.letter.toLowerCase()));
+    
+    // Filter candidate pool to letters not currently on screen
+    const available = [...preset.pool].filter(ch => !activeChars.has(ch.toLowerCase()));
+    const pool = available.length > 0 ? available : [...preset.pool];
+    
+    // Pick truly random letter from pool
+    const idx = Math.floor(Math.random() * pool.length);
+    return pool[idx];
+  }
+
   spawnBubble(staggered = false) {
     const preset = this.config[this.difficulty];
-    const letter = preset.pool[Math.floor(Math.random() * preset.pool.length)];
+    const letter = this.getRandomUniqueLetter();
 
     const arenaWidth = this.arena.clientWidth || 800;
-    const arenaHeight = this.arena.clientHeight || 580;
+    const arenaHeight = this.arena.clientHeight || 500;
     const padding = 50;
 
     // Position calculation
@@ -120,16 +133,17 @@ export class BubblesEngine {
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
 
+    this.arena.appendChild(el);
+
+    const bubble = { letter, x, y, speed, el, id: Math.random() };
+    this.activeBubbles.push(bubble);
+
     // Mobile tap support
     el.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       this.handleBubbleClick(bubble);
     });
 
-    this.arena.appendChild(el);
-
-    const bubble = { letter, x, y, speed, el, id: Math.random() };
-    this.activeBubbles.push(bubble);
     return bubble;
   }
 

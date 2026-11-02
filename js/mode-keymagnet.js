@@ -18,7 +18,8 @@ export class KeyMagnetEngine {
     this.isRunning = false;
     this.isPaused = false;
     this.difficulty = 'easy';
-    this.keySet = 'home'; // 'home' | 'top' | 'bottom' | 'numbers' | 'all'
+    this.keySet = 'all'; // Default to full A-Z alphabet
+    this.targetBag = [];
 
     // Session stats
     this.score = 0;
@@ -56,9 +57,10 @@ export class KeyMagnetEngine {
   start(difficulty, keySet, onGameOver, onHudUpdate) {
     this.reset();
     this.difficulty = difficulty || 'easy';
-    this.keySet = keySet || 'home';
+    this.keySet = keySet || 'all';
     this.onGameOver = onGameOver;
     this.onHudUpdate = onHudUpdate;
+    this.targetBag = [];
 
     // Difficulty config
     if (this.difficulty === 'easy') {
@@ -132,6 +134,22 @@ export class KeyMagnetEngine {
     }, 1000);
   }
 
+  refillBag() {
+    const set = this.keySets[this.keySet] || this.keySets.all;
+    // Fisher-Yates true random shuffle of alphabet array
+    const shuffled = [...set];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    // Prevent first key in new cycle from repeating the last target
+    if (shuffled.length > 1 && shuffled[0] === this.currentTarget) {
+      const swapIdx = Math.floor(Math.random() * (shuffled.length - 1)) + 1;
+      [shuffled[0], shuffled[swapIdx]] = [shuffled[swapIdx], shuffled[0]];
+    }
+    this.targetBag = shuffled;
+  }
+
   nextTarget() {
     if (!this.isRunning) return;
 
@@ -140,15 +158,11 @@ export class KeyMagnetEngine {
       this.keyTimeoutId = null;
     }
 
-    const set = this.keySets[this.keySet] || this.keySets.home;
-    // Pick random key different from current
-    let nextKey = set[Math.floor(Math.random() * set.length)];
-    if (set.length > 1 && nextKey === this.currentTarget) {
-      const filtered = set.filter(k => k !== this.currentTarget);
-      nextKey = filtered[Math.floor(Math.random() * filtered.length)];
+    if (!this.targetBag || this.targetBag.length === 0) {
+      this.refillBag();
     }
 
-    this.currentTarget = nextKey;
+    this.currentTarget = this.targetBag.pop();
     if (this.targetCharEl) {
       this.targetCharEl.textContent = this.currentTarget;
     }
